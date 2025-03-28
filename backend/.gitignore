@@ -1,0 +1,5 @@
+# TS compiled files
+build/**/*
+
+# Dependency directories
+node_modules/

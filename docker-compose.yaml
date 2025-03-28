@@ -1,0 +1,48 @@
+version: '3.8'
+services:
+  frontend:
+    image: jiwonjoung/chartmetric-assignment:frontend
+    ports:
+      - '3000:3000'
+    depends_on:
+      - backend
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:5001
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    working_dir: /app
+
+  backend:
+    image: jiwonjoung/chartmetric-assignment:backend
+    ports:
+      - '5001:5000'
+    depends_on:
+      - db
+    environment:
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_USER=postgres
+      - DB_PASSWORD=postgres
+      - DB_NAME=chartmetric
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+    working_dir: /app
+
+  db:
+    image: jiwonjoung/chartmetric-assignment:database
+    ports:
+      - '5432:5432'
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U postgres']
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_data:
+  node_modules_frontend:
+  node_modules_backend:
